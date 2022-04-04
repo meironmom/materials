@@ -68,16 +68,35 @@ class _TreeGenerator:
     def _add_directory(
         self, directory, index, entries_count, prefix, connector
     ):
-        self._tree.append(f"{prefix}{connector} {directory.name}{os.sep}")
-        if index != entries_count - 1:
-            prefix += PIPE_PREFIX
-        else:
-            prefix += SPACE_PREFIX
-        self._tree_body(
-            directory=directory,
-            prefix=prefix,
-        )
-        self._tree.append(prefix.rstrip())
 
-    def _add_file(self, file, prefix, connector):
-        self._tree.append(f"{prefix}{connector} {file.name}")
+        # ##########################
+        # input code by kkcdean
+        isPyfile = False
+        file_list = os.listdir(directory)
+        file_list_py = [file for file in file_list if file.endswith(".py")]
+        if len(file_list_py) > 0:
+          isPyfile = True
+        # ##########################
+
+        if isPyfile:
+          self._tree.append(f"{prefix}{connector} {directory.name}{os.sep}")
+          if index != entries_count - 1:
+              prefix += PIPE_PREFIX
+          else:
+              prefix += SPACE_PREFIX
+          self._tree_body(
+              directory=directory,
+              prefix=prefix,
+          )
+          self._tree.append(prefix.rstrip())
+
+    def _add_file(self, file, prefix, connector):\
+        # ##########################
+        # input code by kkcdean
+        isPyFile = False
+        fname, ext = os.path.splitext(file.name)
+        if ext == '.py':
+          isPyFile = True
+        # ##########################
+        if isPyFile:
+          self._tree.append(f"{prefix}{connector} {file.name}")
